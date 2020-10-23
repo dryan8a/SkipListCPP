@@ -112,3 +112,26 @@ bool SkipList<T>::Insert(T value)
 	}
 	return true;
 }
+
+template<typename T>
+bool SkipList<T>::Remove(T value)
+{
+	bool didFind = false;
+	auto currentNode = Head;
+	for (int i = currentNode->GetHeight() - 1; i >= 0; i--)
+	{
+		if (currentNode->NextNodes[i] == nullptr || currentNode->NextNodes[i]->GetValue() >= value)
+		{
+			if (currentNode->NextNodes[i] != nullptr && currentNode->NextNodes[i]->GetValue() == value)
+			{
+				currentNode->NextNodes[i] = currentNode->NextNodes[i]->NextNodes[i];
+				didFind = true;
+			}
+			continue;
+		}
+		currentNode = currentNode->NextNodes[i];
+		i = currentNode->GetHeight();
+		continue;
+	}
+	return didFind;
+}
